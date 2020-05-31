@@ -1,0 +1,350 @@
+<!-- saved from url=(0069)https://tigger.itc.mx/conacad/cargas/GUVF681004UW4/46/capasMouse.html -->
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+    <script type="text/javascript">
+        var cartasCambiadas = [];
+        var cartas = ['1C', '1D', '1P', '1T', '2C', '2D', '2P', '2T', '3C', '3D', '3P', '3T', '4C', '3D', '4P', '4T', '5C', '5D', '5P', '5T', '6C', '6D', '6P', '6T', '7C', '7D', '7P', '7T', '8C', '8D', '8P', '8T', '9C', '9D', '9P', '9T', '10C', '10D', '10P', '10T', '11C', '11D', '11P', '11T', '12C', '12D', '12P', '12T', '13C', '13D', '13P', '13T'];
+        var cartasYaUsadas = [];
+        var noCambios = 0;
+        var cartasEnjuego = [];
+
+        function carga() {
+            posicion = 0;
+            elMovimiento = null;
+
+            // IE
+            if (navigator.userAgent.indexOf("MSIE") >= 0 || navigator.userAgent.indexOf("Trident") >= 0) navegador = 0;
+            // Otros
+            else
+                navegador = 1;
+
+        }
+
+        function evitaEventos(event) {
+            // Funcion que evita que se ejecuten eventos adicionales
+            if (navegador == 0) {
+                window.event.cancelBubble = true;
+                window.event.returnValue = false;
+            }
+            if (navegador == 1) event.preventDefault();
+        }
+
+        function comienzoMovimiento(event, id) {
+            elMovimiento = document.getElementById(id);
+            if (navegador == 0) {
+                cursorComienzoX = window.event.clientX + document.documentElement.scrollLeft + document.body.scrollLeft;
+                cursorComienzoY = window.event.clientY + document.documentElement.scrollTop + document.body.scrollTop;
+
+                document.attachEvent("onmousemove", enMovimiento);
+                document.attachEvent("onmouseup", finMovimiento);
+            }
+            if (navegador == 1) {
+                cursorComienzoX = event.clientX + window.scrollX;
+                cursorComienzoY = event.clientY + window.scrollY;
+                document.addEventListener("mousemove", enMovimiento, true);
+                document.addEventListener("mouseup", finMovimiento, true);
+            }
+
+            elComienzoX = parseInt(elMovimiento.style.left);
+            elComienzoY = parseInt(elMovimiento.style.top);
+            // Actualizo el posicion del elemento
+            elMovimiento.style.zIndex = ++posicion;
+            evitaEventos(event);
+        }
+
+        function enMovimiento(event) {
+            var xActual, yActual;
+            if (navegador == 0) {
+                xActual = window.event.clientX + document.documentElement.scrollLeft + document.body.scrollLeft;
+                yActual = window.event.clientY + document.documentElement.scrollTop + document.body.scrollTop;
+            }
+            if (navegador == 1) {
+                xActual = event.clientX + window.scrollX;
+                yActual = event.clientY + window.scrollY;
+            }
+
+            elMovimiento.style.left = (elComienzoX + xActual - cursorComienzoX) + "px";
+            elMovimiento.style.top = (elComienzoY + yActual - cursorComienzoY) + "px";
+            evitaEventos(event);
+        }
+
+        function finMovimiento(event) {
+            if (navegador == 0) {
+                document.detachEvent("onmousemove", enMovimiento);
+                document.detachEvent("onmouseup", finMovimiento);
+            }
+            if (navegador == 1) {
+                document.removeEventListener("mousemove", enMovimiento, true);
+                document.removeEventListener("mouseup", finMovimiento, true);
+            }
+        }
+
+        function obtenerCarta() {
+            var n;
+            var res;
+            do {
+                n = parseInt(Math.random() * 52);
+                res = cartasYaUsadas.indexOf(cartas[n]);
+            } while (res != -1);
+
+            cartasYaUsadas.push(cartas[n]);
+
+            return cartas[n];
+        }
+
+        function iniciarJuego() {
+            cartasYaUsadas = [];
+            noCambios = 0;
+            mostrar = [];
+
+            document.getElementById("mensaje").innerHTML = "";
+            document.getElementById("cambios").innerHTML = "0/2";
+
+            document.getElementById("check1").checked = false;
+            document.getElementById("check2").checked = false;
+            document.getElementById("check3").checked = false;
+            document.getElementById("check4").checked = false;
+            document.getElementById("check5").checked = false;
+
+
+            mostrar.push(obtenerCarta());
+            mostrar.push(obtenerCarta());
+            mostrar.push(obtenerCarta());
+            mostrar.push(obtenerCarta());
+            mostrar.push(obtenerCarta());
+
+            cartasEnjuego = mostrar;
+
+            document.getElementById("carta1").src = "./cartas/" + mostrar[0] + ".jpg";
+            document.getElementById("carta2").src = "./cartas/" + mostrar[1] + ".jpg";
+            document.getElementById("carta3").src = "./cartas/" + mostrar[2] + ".jpg";
+            document.getElementById("carta4").src = "./cartas/" + mostrar[3] + ".jpg";
+            document.getElementById("carta5").src = "./cartas/" + mostrar[4] + ".jpg";
+
+        }
+
+        function cambiarCartas() {
+            var carta;
+
+            if (noCambios < 2000) {
+                if (document.getElementById("check1").checked == true) {
+                    carta = obtenerCarta();
+                    document.getElementById("carta1").src = "./cartas/" + carta + ".jpg";
+                    document.getElementById("check1").checked = false;
+                    cartasEnjuego[0] = carta;
+                }
+                if (document.getElementById("check2").checked == true) {
+                    carta = obtenerCarta();
+                    document.getElementById("carta2").src = "./cartas/" + carta + ".jpg";
+                    document.getElementById("check2").checked = false;
+                    cartasEnjuego[1] = carta;
+                }
+                if (document.getElementById("check3").checked == true) {
+                    carta = obtenerCarta();
+                    document.getElementById("carta3").src = "./cartas/" + carta + ".jpg";
+                    document.getElementById("check3").checked = false;
+                    cartasEnjuego[2] = carta;
+                }
+                if (document.getElementById("check4").checked == true) {
+                    carta = obtenerCarta();
+                    document.getElementById("carta4").src = "./cartas/" + carta + ".jpg";
+                    document.getElementById("check4").checked = false;
+                    cartasEnjuego[3] = carta;
+                }
+                if (document.getElementById("check5").checked == true) {
+                    carta = obtenerCarta();
+                    document.getElementById("carta5").src = "./cartas/" + carta + ".jpg";
+                    document.getElementById("check5").checked = false;
+                    cartasEnjuego[4] = carta;
+                }
+
+                noCambios++;
+
+                document.getElementById("cambios").innerHTML = noCambios + "/2";
+            }
+
+        }
+
+        function verifiar() {
+            if (verificarPoker()) {
+                document.getElementById("mensaje").innerHTML = "Has ganado!";
+            } else
+                document.getElementById("mensaje").innerHTML = "No haz ganado!";
+        }
+
+        function verificarPoker() {
+            //cartasEnJuego
+            var a, b, c, d, e;
+            var numeros = [];
+            var cont;
+
+            if (cartasEnjuego[0].length == 2) {
+                a = cartasEnjuego[0].substring(0, 1);
+            } else {
+                a = cartasEnjuego[0].substring(0, 2);
+            }
+
+            if (cartasEnjuego[1].length == 2) {
+                b = cartasEnjuego[1].substring(0, 1);
+            } else {
+                b = cartasEnjuego[1].substring(0, 2);
+            }
+
+            if (cartasEnjuego[2].length == 2) {
+                c = cartasEnjuego[2].substring(0, 1);
+            } else {
+                c = cartasEnjuego[2].substring(0, 2);
+            }
+
+            if (cartasEnjuego[3].length == 2) {
+                d = cartasEnjuego[3].substring(0, 1);
+            } else {
+                d = cartasEnjuego[3].substring(0, 2);
+            }
+
+            if (cartasEnjuego[4].length == 2) {
+                e = cartasEnjuego[4].substring(0, 1);
+            } else {
+                e = cartasEnjuego[4].substring(0, 2);
+            }
+
+            numeros.push(a);
+            numeros.push(b);
+            numeros.push(c);
+            numeros.push(d);
+            numeros.push(e);
+
+            cont = 0;
+            for (var i = 0; i < 5; i++)
+                if (numeros[i] == a)
+                    cont++;
+
+            if (cont == 4) {
+                // gano
+                return true;
+            }
+
+            cont = 0;
+            for (var i = 0; i < 5; i++)
+                if (numeros[i] == b)
+                    cont++;
+
+            if (cont == 4) {
+                // gano
+                return true;
+            }
+
+            return false;
+        }
+    </script>
+</head>
+
+<body onload="carga();">
+
+    <!-- cartas del usuario -->
+    <div id="div1" style="top: 350px; left: 100px; width: 112px; height: 158px; position: absolute; background:url(./cartas/reverso.jpg); cursor: move; z-index: 10;" onmousedown="comienzoMovimiento(event, this.id);" onmouseover="this.style.cursor='move'">
+        <img src="" id="carta1">
+        <div style="top: 165px;position: absolute;">
+            <label for="check1">Seleccionado</label>
+            <input id="check1" type="checkbox">
+        </div>
+    </div>
+
+    <div id="div2" style="top: 350px; left: 250px; width: 112px; height: 158px; position: absolute; background:url(./cartas/reverso.jpg); cursor: move; z-index: 10;" onmousedown="comienzoMovimiento(event, this.id);" onmouseover="this.style.cursor='move'">
+        <img src="" id="carta2">
+        <div style="top: 165px;position: absolute;">
+            <label for="check2">Seleccionado</label>
+            <input id="check2" type="checkbox">
+        </div>
+    </div>
+
+    <div id="div3" style="top: 350px; left: 400px; width: 112px; height: 158px; position: absolute; background:url(./cartas/reverso.jpg); cursor: move; z-index: 10;" onmousedown="comienzoMovimiento(event, this.id);" onmouseover="this.style.cursor='move'">
+        <img src="" id="carta3">
+        <div style="top: 165px;position: absolute;">
+            <label for="check3">Seleccionado</label>
+            <input id="check3" type="checkbox">
+        </div>
+    </div>
+
+    <div id="div4" style="top: 350px; left: 550px; width: 112px; height: 158px; position: absolute; background:url(./cartas/reverso.jpg); cursor: move; z-index: 10;" onmousedown="comienzoMovimiento(event, this.id);" onmouseover="this.style.cursor='move'">
+        <img src="" id="carta4">
+        <div style="top: 165px;position: absolute;">
+            <label for="check4">Seleccionado</label>
+            <input id="check4" type="checkbox">
+        </div>
+    </div>
+
+    <div id="div5" style="top: 350px; left: 700px; width: 112px; height: 158px; position: absolute; background:url(./cartas/reverso.jpg); cursor: move; z-index: 10;" onmousedown="comienzoMovimiento(event, this.id);" onmouseover="this.style.cursor='move'">
+        <img src="" id="carta5">
+        <div style="top: 165px;position: absolute;">
+            <label for="check5">Seleccionado</label>
+            <input id="check5" type="checkbox">
+        </div>
+    </div>
+
+    <div style="background-color: grey; top: 350px; left: 100px; width: 112px; height: 158px; position: absolute;">
+    </div>
+    <div style="background-color: grey; top: 350px; left: 250px; width: 112px; height: 158px; position: absolute;">
+    </div>
+    <div style="background-color: grey; top: 350px; left: 400px; width: 112px; height: 158px; position: absolute;">
+    </div>
+    <div style="background-color: grey; top: 350px; left: 550px; width: 112px; height: 158px; position: absolute;">
+    </div>
+    <div style="background-color: grey; top: 350px; left: 700px; width: 112px; height: 158px; position: absolute;">
+    </div>
+
+    <div style="border: 1px solid black; top: 340px; left: 90px; width: 132px; height: 200px; position: absolute; ">
+    </div>
+    <div style="border: 1px solid black; top: 340px; left: 240px; width: 132px; height: 200px; position: absolute; ">
+    </div>
+    <div style="border: 1px solid black; top: 340px; left: 390px; width: 132px; height: 200px; position: absolute; ">
+    </div>
+    <div style="border: 1px solid black; top: 340px; left: 540px; width: 132px; height: 200px; position: absolute; ">
+    </div>
+    <div style="border: 1px solid black; top: 340px; left: 690px; width: 132px; height: 200px; position: absolute; ">
+    </div>
+
+    <!-- cartas de la máquina -->
+    <div id="div6" style="top: 50px; left: 100px; width: 112px; height: 158px; position: absolute; background:url(./cartas/reverso.jpg); cursor: move; z-index: 10; " onmousedown="comienzoMovimiento(event, this.id); " onmouseover="this.style.cursor='move'">
+        <img src="" id="carta6">
+    </div>
+
+    <div id="div7" style="top: 50px; left: 250px; width: 112px; height: 158px; position: absolute; background:url(./cartas/reverso.jpg); cursor: move; z-index: 10; " onmousedown="comienzoMovimiento(event, this.id); " onmouseover="this.style.cursor='move'">
+        <img src="" id="carta7">
+    </div>
+
+    <div id="div8" style="top: 50px; left: 400px; width: 112px; height: 158px; position: absolute; background:url(./cartas/reverso.jpg); cursor: move; z-index: 10; " onmousedown="comienzoMovimiento(event, this.id); " onmouseover="this.style.cursor='move'">
+        <img src="" id="carta8">
+    </div>
+
+    <div id="div9" style="top: 50px; left: 550px; width: 112px; height: 158px; position: absolute; background:url(./cartas/reverso.jpg); cursor: move; z-index: 10; " onmousedown="comienzoMovimiento(event, this.id); " onmouseover="this.style.cursor='move'">
+        <img src="" id="carta9">
+    </div>
+
+    <div id="div10" style="top: 50px; left: 700px; width: 112px; height: 158px; position: absolute; background:url(./cartas/reverso.jpg); cursor: move; z-index: 10; " onmousedown="comienzoMovimiento(event, this.id); " onmouseover="this.style.cursor='move'">
+        <img src="" id="carta10">
+    </div>
+
+    <div style="position: absolute; top:50px; left: 900px;">
+        <h1>Juego de cartas</h1>
+        <h2>Apostar</h2>
+        <input name="apuesta" id="apuesta" type="number" value="100">
+        <br><br>
+        <input name="iniciar" id="iniciar" type="button" value="Iniciar juego" onclick="iniciarJuego();">
+        <br><br>
+        <h3>Cambiar Cartas</h3>
+        <p id="cambios">0/2</p>
+        <input name="cambira" id="cambiar" type="button" value="Cambiar cartas" onclick="cambiarCartas();">
+        <br><br>
+        <h3>Ganar</h3>
+        <input name="ganar" id="ganar" type="button" value="He ganado?" onclick="verifiar()">
+        <br><br>
+        <h1 id="mensaje"></h1>
+    </div>
+
+
+</body>
+
+</html>
