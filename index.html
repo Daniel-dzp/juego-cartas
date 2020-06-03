@@ -132,31 +132,31 @@
                 if (document.getElementById("check1").checked == true) {
                     carta = obtenerCarta();
                     document.getElementById("carta1").src = "./cartas/" + carta + ".jpg";
-                    document.getElementById("check1").checked = false;
+                    //document.getElementById("check1").checked = false;
                     cartasEnjuego[0] = carta;
                 }
                 if (document.getElementById("check2").checked == true) {
                     carta = obtenerCarta();
                     document.getElementById("carta2").src = "./cartas/" + carta + ".jpg";
-                    document.getElementById("check2").checked = false;
+                    //document.getElementById("check2").checked = false;
                     cartasEnjuego[1] = carta;
                 }
                 if (document.getElementById("check3").checked == true) {
                     carta = obtenerCarta();
                     document.getElementById("carta3").src = "./cartas/" + carta + ".jpg";
-                    document.getElementById("check3").checked = false;
+                    //document.getElementById("check3").checked = false;
                     cartasEnjuego[2] = carta;
                 }
                 if (document.getElementById("check4").checked == true) {
                     carta = obtenerCarta();
                     document.getElementById("carta4").src = "./cartas/" + carta + ".jpg";
-                    document.getElementById("check4").checked = false;
+                    //document.getElementById("check4").checked = false;
                     cartasEnjuego[3] = carta;
                 }
                 if (document.getElementById("check5").checked == true) {
                     carta = obtenerCarta();
                     document.getElementById("carta5").src = "./cartas/" + carta + ".jpg";
-                    document.getElementById("check5").checked = false;
+                    //document.getElementById("check5").checked = false;
                     cartasEnjuego[4] = carta;
                 }
 
@@ -169,7 +169,10 @@
 
         function verifiar() {
             if (verificarPoker()) {
-                document.getElementById("mensaje").innerHTML = "Has ganado!";
+                document.getElementById("mensaje").innerHTML = "Has ganado con un poker!";
+            } else
+            if (verficarCorrida()) {
+                document.getElementById("mensaje").innerHTML = "Has ganado por una corrida!";
             } else
                 document.getElementById("mensaje").innerHTML = "No haz ganado!";
         }
@@ -180,41 +183,14 @@
             var numeros = [];
             var cont;
 
-            if (cartasEnjuego[0].length == 2) {
-                a = cartasEnjuego[0].substring(0, 1);
-            } else {
-                a = cartasEnjuego[0].substring(0, 2);
-            }
 
-            if (cartasEnjuego[1].length == 2) {
-                b = cartasEnjuego[1].substring(0, 1);
-            } else {
-                b = cartasEnjuego[1].substring(0, 2);
+            for (var i = 0; i < 5; i++) {
+                if (cartasEnjuego[i].length == 2) {
+                    numeros.push(cartasEnjuego[i].substring(0, 1));
+                } else {
+                    numeros.push(cartasEnjuego[i].substring(0, 2));
+                }
             }
-
-            if (cartasEnjuego[2].length == 2) {
-                c = cartasEnjuego[2].substring(0, 1);
-            } else {
-                c = cartasEnjuego[2].substring(0, 2);
-            }
-
-            if (cartasEnjuego[3].length == 2) {
-                d = cartasEnjuego[3].substring(0, 1);
-            } else {
-                d = cartasEnjuego[3].substring(0, 2);
-            }
-
-            if (cartasEnjuego[4].length == 2) {
-                e = cartasEnjuego[4].substring(0, 1);
-            } else {
-                e = cartasEnjuego[4].substring(0, 2);
-            }
-
-            numeros.push(a);
-            numeros.push(b);
-            numeros.push(c);
-            numeros.push(d);
-            numeros.push(e);
 
             cont = 0;
             for (var i = 0; i < 5; i++)
@@ -237,6 +213,38 @@
             }
 
             return false;
+        }
+
+        function verficarCorrida() {
+            var numeros = [];
+            // extraer los numeros de las cartas
+            for (var i = 0; i < 5; i++) {
+                if (cartasEnjuego[i].length == 2) {
+                    numeros.push(cartasEnjuego[i].substring(0, 1));
+                } else {
+                    numeros.push(cartasEnjuego[i].substring(0, 2));
+                }
+            }
+
+            // ordenar los numeros
+            numeros.sort();
+            console.log(numeros);
+            // verficar si estan en secuencia
+            var numeroCartaAct;
+
+            numeroCartaAct = numeros[0];
+            for (var i = 1; i < 5; i++) {
+                // 6 8 9 10 11
+                if (parseInt(numeroCartaAct) + 1 == numeros[i]) {
+                    numeroCartaAct++;
+                } else {
+                    console.log(parseInt(numeroCartaAct) + 1, numeros[i]);
+                    // no son consecutivos
+                    return false;
+                }
+            }
+
+            return true;
         }
     </script>
 </head>
