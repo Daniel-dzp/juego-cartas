@@ -174,12 +174,17 @@
             if (verficarCorrida()) {
                 document.getElementById("mensaje").innerHTML = "Has ganado por una corrida!";
             } else
+            if (verificarTercia()) {
+                document.getElementById("mensaje").innerHTML = "Has ganado por una tercia!";
+            } else
+            if (verificarFull()) {
+                document.getElementById("mensaje").innerHTML = "Has ganado por un full!";
+            } else
                 document.getElementById("mensaje").innerHTML = "No haz ganado!";
         }
 
         function verificarPoker() {
             //cartasEnJuego
-            var a, b, c, d, e;
             var numeros = [];
             var cont;
 
@@ -194,7 +199,7 @@
 
             cont = 0;
             for (var i = 0; i < 5; i++)
-                if (numeros[i] == a)
+                if (numeros[i] == numeros[0])
                     cont++;
 
             if (cont == 4) {
@@ -204,7 +209,7 @@
 
             cont = 0;
             for (var i = 0; i < 5; i++)
-                if (numeros[i] == b)
+                if (numeros[i] == numeros[1])
                     cont++;
 
             if (cont == 4) {
@@ -228,7 +233,7 @@
 
             // ordenar los numeros
             numeros.sort();
-            console.log(numeros);
+
             // verficar si estan en secuencia
             var numeroCartaAct;
 
@@ -238,13 +243,92 @@
                 if (parseInt(numeroCartaAct) + 1 == numeros[i]) {
                     numeroCartaAct++;
                 } else {
-                    console.log(parseInt(numeroCartaAct) + 1, numeros[i]);
                     // no son consecutivos
                     return false;
                 }
             }
 
             return true;
+        }
+
+        function verificarTercia() {
+            var numeros = [];
+
+            // extraer los numeros de las cartas
+            for (var i = 0; i < 5; i++) {
+                if (cartasEnjuego[i].length == 2) {
+                    numeros.push(cartasEnjuego[i].substring(0, 1));
+                } else {
+                    numeros.push(cartasEnjuego[i].substring(0, 2));
+                }
+            }
+
+            // verificar si 3 son iguales
+            var cont = 0;
+            var siHayTercia = false;
+            var cartasDiferentes = [];
+            for (i = 0; i < 5 && !siHayTercia; i++) {
+                cont = 0;
+                cartasDiferentes = [];
+                for (f = 0; f < 5; f++) {
+                    if (numeros[i] == numeros[f])
+                        cont++;
+                    else
+                        cartasDiferentes.push(numeros[f]); // se agrega a un array las cartas diferentes
+                }
+                if (cont == 3) {
+                    siHayTercia = true;
+                }
+            }
+
+            if (siHayTercia) {
+                // comparar si son diferentes
+                // si hay tercia significa que solo agrego 2 numeros a la variable cartasDiferentes
+                if (cartasDiferentes[0] != cartasDiferentes[1]) // si son diferentes las cartas restantes es una tercia
+                    return true;
+            }
+
+            return false;
+        }
+
+        function verificarFull() {
+            var numeros = [];
+
+            // extraer los numeros de las cartas
+            for (var i = 0; i < 5; i++) {
+                if (cartasEnjuego[i].length == 2) {
+                    numeros.push(cartasEnjuego[i].substring(0, 1));
+                } else {
+                    numeros.push(cartasEnjuego[i].substring(0, 2));
+                }
+            }
+
+            // verificar si 3 son iguales
+            var cont = 0;
+            var siHayTercia = false;
+            var cartasDiferentes = [];
+            for (i = 0; i < 5 && !siHayTercia; i++) {
+                cont = 0;
+                cartasDiferentes = [];
+                for (f = 0; f < 5; f++) {
+                    if (numeros[i] == numeros[f])
+                        cont++;
+                    else
+                        cartasDiferentes.push(numeros[f]); // se agrega a un array las cartas diferentes
+                }
+                if (cont == 3) {
+                    siHayTercia = true;
+                }
+            }
+
+            if (siHayTercia) {
+                // comparar si son diferentes
+                // si hay tercia significa que solo agrego 2 numeros a la variable cartasDiferentes
+                if (cartasDiferentes[0] == cartasDiferentes[1]) // si son iguales las cartas restantes es un full
+                    return true;
+            }
+
+            return false;
         }
     </script>
 </head>
