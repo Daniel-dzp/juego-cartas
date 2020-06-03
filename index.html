@@ -5,7 +5,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
     <script type="text/javascript">
         var cartasCambiadas = [];
-        var cartas = ['1C', '1D', '1P', '1T', '2C', '2D', '2P', '2T', '3C', '3D', '3P', '3T', '4C', '3D', '4P', '4T', '5C', '5D', '5P', '5T', '6C', '6D', '6P', '6T', '7C', '7D', '7P', '7T', '8C', '8D', '8P', '8T', '9C', '9D', '9P', '9T', '10C', '10D', '10P', '10T', '11C', '11D', '11P', '11T', '12C', '12D', '12P', '12T', '13C', '13D', '13P', '13T'];
+        var cartas = ['1C', '1D', '1P', '1T', '2C', '2D', '2P', '2T', '3C', '3D', '3P', '3T', '4C', '4D', '4P', '4T', '5C', '5D', '5P', '5T', '6C', '6D', '6P', '6T', '7C', '7D', '7P', '7T', '8C', '8D', '8P', '8T', '9C', '9D', '9P', '9T', '10C', '10D', '10P', '10T', '11C', '11D', '11P', '11T', '12C', '12D', '12P', '12T', '13C', '13D', '13P', '13T'];
         var cartasYaUsadas = [];
         var noCambios = 0;
         var cartasEnjuego = [];
@@ -168,19 +168,26 @@
         }
 
         function verifiar() {
+            apuesta = document.getElementById("apuesta").value;
             if (verificarPoker()) {
                 document.getElementById("mensaje").innerHTML = "Has ganado con un poker!";
+                document.getElementById("dinero").innerHTML = "Ganaste $" + apuesta;
             } else
             if (verficarCorrida()) {
                 document.getElementById("mensaje").innerHTML = "Has ganado por una corrida!";
+                document.getElementById("dinero").innerHTML = "Ganaste $" + apuesta;
             } else
             if (verificarTercia()) {
                 document.getElementById("mensaje").innerHTML = "Has ganado por una tercia!";
+                document.getElementById("dinero").innerHTML = "Ganaste $" + apuesta;
             } else
             if (verificarFull()) {
                 document.getElementById("mensaje").innerHTML = "Has ganado por un full!";
-            } else
+                document.getElementById("dinero").innerHTML = "Ganaste $" + apuesta;
+            } else {
                 document.getElementById("mensaje").innerHTML = "No haz ganado!";
+                document.getElementById("dinero").innerHTML = "Perdiste $" + apuesta;
+            }
         }
 
         function verificarPoker() {
@@ -225,14 +232,16 @@
             // extraer los numeros de las cartas
             for (var i = 0; i < 5; i++) {
                 if (cartasEnjuego[i].length == 2) {
-                    numeros.push(cartasEnjuego[i].substring(0, 1));
+                    numeros.push(parseInt(cartasEnjuego[i].substring(0, 1)));
                 } else {
-                    numeros.push(cartasEnjuego[i].substring(0, 2));
+                    numeros.push(parseInt(cartasEnjuego[i].substring(0, 2)));
                 }
             }
 
             // ordenar los numeros
-            numeros.sort();
+            numeros.sort(function(a, b) {
+                return a - b;
+            });
 
             // verficar si estan en secuencia
             var numeroCartaAct;
@@ -240,7 +249,7 @@
             numeroCartaAct = numeros[0];
             for (var i = 1; i < 5; i++) {
                 // 6 8 9 10 11
-                if (parseInt(numeroCartaAct) + 1 == numeros[i]) {
+                if (numeroCartaAct + 1 == numeros[i]) {
                     numeroCartaAct++;
                 } else {
                     // no son consecutivos
@@ -434,6 +443,7 @@
         <input name="ganar" id="ganar" type="button" value="He ganado?" onclick="verifiar()">
         <br><br>
         <h1 id="mensaje"></h1>
+        <p id="dinero"></p>
     </div>
 
 
